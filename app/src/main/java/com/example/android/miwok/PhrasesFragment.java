@@ -3,7 +3,6 @@ package com.example.android.miwok;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,20 +18,13 @@ import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NumbersFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link NumbersFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
-public class NumbersFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+public class PhrasesFragment extends Fragment {
+
     private MediaPlayer mp;
     private AudioManager am;
 
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener(){
-
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
             releaseMediaPlayer();
@@ -51,54 +43,44 @@ public class NumbersFragment extends Fragment {
                 mp.start();
             } else if(focusChange==AudioManager.AUDIOFOCUS_LOSS){
                 //permanent loss
-                //am.unregisterMediaButtonEventReceiver();
                 releaseMediaPlayer();
                 am.abandonAudioFocus(afChangeListener);
             }
         }
     };
 
-    public NumbersFragment() {
+    public PhrasesFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.activity_numbers, container, false);
-
+        View rootView = inflater.inflate(R.layout.activity_phrases, container, false);
         final ArrayList<Word> words = new ArrayList<Word>();
-        words.add(new Word("one","lutti",R.drawable.number_one,R.raw.number_one));
-        words.add(new Word("two","otiiko", R.drawable.number_two,R.raw.number_two));
-        words.add(new Word("three","tolookosu", R.drawable.number_three, R.raw.number_three));
-        words.add(new Word("four","oyyisa", R.drawable.number_four, R.raw.number_four));
-        words.add(new Word("five","massokka", R.drawable.number_five, R.raw.number_five));
-        words.add(new Word("six","tenmokka", R.drawable.number_six, R.raw.number_six));
-        words.add(new Word("seven","kanekaku", R.drawable.number_seven, R.raw.number_seven));
-        words.add(new Word("eight","kawinta", R.drawable.number_eight, R.raw.number_eight));
-        words.add(new Word("nine","wo'e", R.drawable.number_nine, R.raw.number_nine));
-        words.add(new Word("ten","na'aacha", R.drawable.number_ten, R.raw.number_ten));
+        words.add(new Word("Where are you going?","minto wuksus",-1, R.raw.phrase_where_are_you_going));
+        words.add(new Word("What is your name?","Tinna ayaase'na",-1, R.raw.phrase_what_is_your_name));
+        words.add(new Word("My name is...","ayaaset...", -1,R.raw.phrase_my_name_is));
+        words.add(new Word("How are you feeling?","michaksas?", -1, R.raw.phrase_how_are_you_feeling));
+        words.add(new Word("I'm feeling good","kuchi achit", -1, R.raw.phrase_im_feeling_good));
+        words.add(new Word("Are you coming?","aanas'aa", -1, R.raw.phrase_are_you_coming));
+        words.add(new Word("yes, I'm coming","haa'aanam", -1, R.raw.phrase_yes_im_coming));
+        words.add(new Word("I'm coming","aanam", -1, R.raw.phrase_im_coming));
+        words.add(new Word("let's go","yoowutis", -1, R.raw.phrase_lets_go));
+        words.add(new Word("Come here","anni'nem", -1, R.raw.phrase_come_here));
 
-        WordAdapter itemsAdapter = new WordAdapter(getActivity(), words, R.color.category_numbers);
-        ListView listView = (ListView) rootView.findViewById(R.id.list);
-        listView.setAdapter(itemsAdapter);
-
-        //set audio focus
+        WordAdapter itemAdapter = new WordAdapter(getActivity(), words, R.color.category_phrases);
+        ListView phrasesView = (ListView) rootView.findViewById(R.id.list_phrases);
+        phrasesView.setAdapter(itemAdapter);
         am=(AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        phrasesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 releaseMediaPlayer();
 
                 int result=am.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
                 if(result==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){
-                    //am.registerMediaButtonEventReceiver();
                     Word word=words.get(position);
                     mp=MediaPlayer.create(getActivity(), word.getmSoundId());
                     mp.start();
@@ -106,7 +88,6 @@ public class NumbersFragment extends Fragment {
                 }
             }
         });
-
         return rootView;
     }
 
@@ -124,18 +105,4 @@ public class NumbersFragment extends Fragment {
         }
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }
