@@ -17,6 +17,8 @@ package com.example.android.miwok;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,8 +31,16 @@ public class    MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Set the content of the activity to use the activity_main.xml layout file
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_fragment);
 
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        CategoryAdapter categoryAdapter = new CategoryAdapter(this, getSupportFragmentManager());
+        viewPager.setAdapter(categoryAdapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        /*
         // Find the View that shows the numbers category
         TextView numbers = (TextView) findViewById(R.id.numbers);
 
@@ -94,5 +104,6 @@ public class    MainActivity extends AppCompatActivity {
                 startActivity(phrasesIntent);
             }
         });
+        */
     }
 }
